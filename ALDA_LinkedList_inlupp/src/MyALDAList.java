@@ -26,8 +26,20 @@ public class MyALDAList<T> implements ALDAList<T> {
 
 	@Override
 	public void add(int index, T element) {
-		// TODO Auto-generated method stub
-
+		Node<T> node = first;
+		for(int i = -1; i < size; i++) {
+			if(i == index - 1) {
+				Node<T> newNode = new Node<T>(element);
+				newNode.nextNode = node.nextNode;
+				node.nextNode = newNode;
+				
+				currentOperations++;
+				size++;
+				return;
+			}
+			node = node.nextNode;
+		}
+		throw new IndexOutOfBoundsException();
 	}
 
 	@Override
@@ -107,12 +119,14 @@ public class MyALDAList<T> implements ALDAList<T> {
 	private static class ListIterator<T> implements Iterator<T> {
 		MyALDAList<T> list;
 
-		int operations = list.currentOperations;
+		int operations;
 		Node<T> currentNode, previousNode;
 		int index = 0;
 		
 		public ListIterator(MyALDAList<T> list) {
 			this.list = list;
+			operations = list.currentOperations;
+			currentNode = list.first;
 		}
 
 		@Override
