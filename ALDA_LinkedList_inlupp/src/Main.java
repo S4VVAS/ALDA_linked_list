@@ -14,13 +14,17 @@ public class Main {
 		System.out.println("Size " + list.size);
 		
 		Iterator<MyALDAList<Integer>> it = list.iterator();
-		for(int i = 0; i < list.size ; i++)
+		for(int i = 0; i < list.size ; i++) {
 			if(it.hasNext())
 				System.out.println(it.next());
+			//list.remove((Integer)2);
+		
+		}
 		System.out.println();
 		
 		
-		list.remove((Integer)4);
+		System.out.println(list.contains(2));
+		//list.remove(0);
 		
 		Iterator<MyALDAList<Integer>> it2 = list.iterator();
 		for(int i = 0; i < list.size ; i++)

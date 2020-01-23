@@ -13,7 +13,7 @@ public class MyALDAList<T> implements ALDAList<T> {
 	public MyALDAList() {
 		first.nextNode = last;
 	}
-	
+
 	@Override
 	public void add(T element) {
 		Node<T> newNode = new Node<T>(element);
@@ -27,17 +27,15 @@ public class MyALDAList<T> implements ALDAList<T> {
 	@Override
 	public void add(int index, T element) {
 		Node<T> node = first;
-		for(int i = -1; i < size; i++) {
-			if(i == index - 1) {
+		for (int i = -1; i < size; i++, node = node.nextNode) {
+			if (i == index - 1) {
 				Node<T> newNode = new Node<T>(element);
 				newNode.nextNode = node.nextNode;
 				node.nextNode = newNode;
-				
 				currentOperations++;
 				size++;
 				return;
 			}
-			node = node.nextNode;
 		}
 		throw new IndexOutOfBoundsException();
 	}
@@ -45,22 +43,27 @@ public class MyALDAList<T> implements ALDAList<T> {
 	@Override
 	public boolean remove(T element) {
 		Node<T> node = first;
-		for(int i = 0; i < size; i++) {
-			if(node.nextNode.data == element) {
+		for (int i = 0; i < size; i++) {
+			if (node.nextNode.data.equals(element)) {
 				delete(node);
 				return true;
 			}
 			node = node.nextNode;
 		}
-		
 		return false;
-		
 	}
-	
+
 	@Override
 	public T remove(int index) {
-		// TODO Auto-generated method stub
-		return null;
+		Node<T> node = first;
+		for (int i = 0; i < size; i++,node = node.nextNode) {
+			if (i == index){
+				Node<T> removedNode = node.nextNode;
+				delete(node);
+				return removedNode.data;
+			}
+		}
+		throw new IndexOutOfBoundsException();
 	}
 
 	private void delete(Node<T> previousNode) {
@@ -72,7 +75,12 @@ public class MyALDAList<T> implements ALDAList<T> {
 
 	@Override
 	public boolean contains(T element) {
-		// TODO Auto-generated method stub
+		Node<T> node = first;
+		for (int i = 0; i < size; i++) {
+			node = node.nextNode;
+			if(node.data != null && node.data.equals(element))
+				return true;
+		}
 		return false;
 	}
 
@@ -86,8 +94,6 @@ public class MyALDAList<T> implements ALDAList<T> {
 	public Iterator iterator() {
 		return new ListIterator<T>(this);
 	}
-
-	
 
 	@Override
 	public T get(int index) {
@@ -122,7 +128,7 @@ public class MyALDAList<T> implements ALDAList<T> {
 		int operations;
 		Node<T> currentNode, previousNode;
 		int index = 0;
-		
+
 		public ListIterator(MyALDAList<T> list) {
 			this.list = list;
 			operations = list.currentOperations;
@@ -131,20 +137,25 @@ public class MyALDAList<T> implements ALDAList<T> {
 
 		@Override
 		public boolean hasNext() {
+			checkMod();
 			return currentNode.nextNode != null;
 		}
 
 		@Override
 		public T next() {
-			if (hasNext())
-				if (operations == list.currentOperations) {
-					previousNode = currentNode;
-					currentNode = currentNode.nextNode;
-					index++;
-					return currentNode.data;
-				} else
-					throw new ConcurrentModificationException();
+			if (hasNext()) {
+				checkMod();
+				previousNode = currentNode;
+				currentNode = currentNode.nextNode;
+				index++;
+				return currentNode.data;
+			}
 			throw new NoSuchElementException();
+		}
+
+		private void checkMod() {
+			if (operations != list.currentOperations)
+				throw new ConcurrentModificationException();
 		}
 
 	}
