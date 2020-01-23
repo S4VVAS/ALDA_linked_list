@@ -72,7 +72,7 @@ public class MyALDAList<T> implements ALDAList<T> {
 
 	@Override
 	public Iterator iterator() {
-		return new ListIterator<T>();
+		return new ListIterator<T>(this);
 	}
 
 	
@@ -105,11 +105,15 @@ public class MyALDAList<T> implements ALDAList<T> {
 	}
 
 	private static class ListIterator<T> implements Iterator<T> {
-		MyALDAList<T> list = new MyALDAList<T>();
+		MyALDAList<T> list;
 
 		int operations = list.currentOperations;
 		Node<T> currentNode, previousNode;
 		int index = 0;
+		
+		public ListIterator(MyALDAList<T> list) {
+			this.list = list;
+		}
 
 		@Override
 		public boolean hasNext() {
