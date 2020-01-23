@@ -13,7 +13,7 @@ public class Main {
 		list.add(1, 4);
 		System.out.println("Size " + list.size);
 		
-		Iterator<MyALDAList<Integer>> it = list.iterator();
+		Iterator<Integer> it = list.iterator();
 		for(int i = 0; i < list.size ; i++) {
 			if(it.hasNext())
 				System.out.println(it.next());
@@ -23,10 +23,10 @@ public class Main {
 		System.out.println();
 		
 		
-		System.out.println(list.contains(2));
+		System.out.println(list.indexOf(3));
 		//list.remove(0);
 		
-		Iterator<MyALDAList<Integer>> it2 = list.iterator();
+		Iterator<Integer> it2 = list.iterator();
 		for(int i = 0; i < list.size ; i++)
 			if(it2.hasNext())
 				System.out.println(it2.next());
