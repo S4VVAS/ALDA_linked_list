@@ -193,6 +193,7 @@ public class ALDAListTest {
 		assertEquals("[First, Second, Third]", list.toString());
 
 		list.add("A");
+		
 		assertEquals(4, list.size());
 		assertEquals("[First, Second, Third, A]", list.toString());
 		list.add("B");
@@ -271,6 +272,7 @@ public class ALDAListTest {
 
 		list.add(0, "A");
 		list.add("B");
+		
 		assertEquals("[A, Fourth, First, B]", list.toString());
 	}
 

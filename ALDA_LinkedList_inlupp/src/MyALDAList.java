@@ -4,16 +4,17 @@ import java.util.NoSuchElementException;
 
 public class MyALDAList<T> implements ALDAList<T> {
 
-	final Node<T> first = new Node<T>(null);
-	final Node<T> last = new Node<T>(null);
-	Node<T> lastElement = first;
-	int currentOperations = 0;
-	int size = 0;
+	private final Node<T> first = new Node<T>(null);
+	private final Node<T> last = new Node<T>(null);
+	private Node<T> lastElement = first;
+	private int currentOperations = 0;
+	private int size = 0;
 
 	public MyALDAList() {
 		first.nextNode = last;
 	}
 
+	/** Adds a specified element of a type, into the linked list of that type*/
 	@Override
 	public void add(T element) {
 		Node<T> newNode = new Node<T>(element);
@@ -32,6 +33,8 @@ public class MyALDAList<T> implements ALDAList<T> {
 				Node<T> newNode = new Node<T>(element);
 				newNode.nextNode = node.nextNode;
 				node.nextNode = newNode;
+				if(i == size-1)
+					lastElement = newNode;
 				currentOperations++;
 				size++;
 				return;
@@ -43,12 +46,11 @@ public class MyALDAList<T> implements ALDAList<T> {
 	@Override
 	public boolean remove(T element) {
 		Node<T> node = first;
-		for (int i = 0; i < size; i++) {
+		for (int i = -1; i < size-1; i++, node = node.nextNode) {
 			if (node.nextNode.data.equals(element)) {
 				delete(node);
 				return true;
 			}
-			node = node.nextNode;
 		}
 		return false;
 	}
@@ -56,8 +58,8 @@ public class MyALDAList<T> implements ALDAList<T> {
 	@Override
 	public T remove(int index) {
 		Node<T> node = first;
-		for (int i = 0; i < size; i++, node = node.nextNode) {
-			if (i == index) {
+		for (int i = -1; i < size-1; i++, node = node.nextNode) {
+			if (i == index-1) {
 				Node<T> removedNode = node.nextNode;
 				delete(node);
 				return removedNode.data;
@@ -67,6 +69,9 @@ public class MyALDAList<T> implements ALDAList<T> {
 	}
 
 	private void delete(Node<T> previousNode) {
+		if(previousNode.nextNode == lastElement) 
+			lastElement = previousNode;
+		
 		Node<T> nextNode = previousNode.nextNode.nextNode;
 		previousNode.nextNode = nextNode;
 		size--;
@@ -96,9 +101,8 @@ public class MyALDAList<T> implements ALDAList<T> {
 
 	@Override
 	public T get(int index) {
-		Node<T> node = first;
-		for (int i = 0; i < size; i++) {
-			node = node.nextNode;
+		Node<T> node = first.nextNode;
+		for (int i = 0; i < size; i++, node = node.nextNode) {
 			if (i == index)
 				return node.data;
 		}
@@ -123,7 +127,7 @@ public class MyALDAList<T> implements ALDAList<T> {
 		String str = "[";
 		Iterator<T> it = this.iterator();
 		boolean firstElm = true;
-		while (it.hasNext()) 
+		while(it.hasNext())
 			if (firstElm) {
 				str = str + it.next();
 				firstElm = false;
@@ -132,7 +136,6 @@ public class MyALDAList<T> implements ALDAList<T> {
 				str = str + ", " + it.next();
 		str = str + "]";
 		return str;
-
 	}
 
 	// ____INNER CLASSES BELLOW_______
@@ -148,11 +151,11 @@ public class MyALDAList<T> implements ALDAList<T> {
 	}
 
 	private static class ListIterator<T> implements Iterator<T> {
-		MyALDAList<T> list;
+		private MyALDAList<T> list;
 
-		int operations;
-		Node<T> currentNode, previousNode;
-		int index = 0;
+		private int operations;
+		private Node<T> currentNode, previousNode;
+		private int index = 0;
 
 		public ListIterator(MyALDAList<T> list) {
 			this.list = list;
